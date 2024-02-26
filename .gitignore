@@ -2,3 +2,12 @@
 .vscode/
 myenv/
 dataset/
+
+test.ipynb
+
+log.txt
+
+src_old/
+
+*.pyc
+
