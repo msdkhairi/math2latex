@@ -1,5 +1,5 @@
-from .runner import Runner
-from .config import config
+from runner import Runner
+from config import config
 
 def main():
     runner = Runner(config)

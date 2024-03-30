@@ -1,7 +1,7 @@
 import torch
 
-from .data.dataset import TrainDataset, get_dataloader
-from .model.transformer2 import ResNetTransformer
+from data.dataset import TrainDataset, get_dataloader
+from model.transformer2 import ResNetTransformer
 import logging
 from torch.utils.tensorboard import SummaryWriter
 

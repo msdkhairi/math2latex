@@ -13,3 +13,5 @@ src_old/
 *.pyc
 
 runs/
+
+*.log
