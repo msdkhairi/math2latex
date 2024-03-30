@@ -10,11 +10,11 @@ def download_from_url(url, filename):
     """
     urlretrieve(url, filename)
 
-def extract_tarfile(filename, dest=os.getcwd(), verbose=0):
+def extract_tarfile(filename, dest=os.getcwd()):
     """extract .tar file
     """
     with tarfile.open(filename, "r") as f:
-        f.extractall(dest)
+        f.extractall(path=dest, filter=lambda tarinfo, path: tarinfo)
 
 
 
@@ -50,7 +50,11 @@ def get_max_length(formulas, min_occurrences=0):
             max_length = length
     return max_length
 
-    
+
+class Config:
+    def __init__(self, dictionary):
+        for key, value in dictionary.items():
+            setattr(self, key, value)
 
 
 # class BaseDataset(Dataset):
