@@ -1,4 +1,4 @@
-dataset = {
+train_dataset = {
     'root': 'dataset',
     'images_folder': 'formula_images_processed',
     'label_file': 'im2latex_formulas.norm.lst',
@@ -8,10 +8,27 @@ dataset = {
     'num_workers': 4
 }
 
-train_dataloader = {
-    'batch_size': 2,
-    'num_workers': 1
+val_dataset = {
+    'root': 'dataset',
+    'images_folder': 'formula_images_processed',
+    'label_file': 'im2latex_formulas.norm.lst',
+    'data_filter': 'im2latex_validate_filter.lst',
+    'transform': 'train',
+    'batch_size': 8,
+    'num_workers': 4
 }
+
+train_dataloader = {
+    'batch_size': 8,
+    'num_workers': 4
+}
+
+val_dataloader = {
+    'batch_size': 8,
+    'num_workers': 4
+}
+
+
 
 model = {
     'd_model': 128,
@@ -24,7 +41,9 @@ model = {
 }
 
 optimizer = {
-    'lr': 0.001
+    'lr': 0.001,
+    'milestones': [10],
+    'gamma': 0.5
 }
 
 
@@ -41,8 +60,10 @@ class Config:
                 setattr(self, key, value)
 
 config = Config({
-    'dataset': Config(dataset),
+    'train_dataset': Config(train_dataset),
+    'val_dataset': Config(val_dataset),
     'train_dataloader': Config(train_dataloader),
+    'val_dataloader': Config(val_dataloader),
     'model': Config(model),
     'optimizer': Config(optimizer),
     'training': Config(training)
