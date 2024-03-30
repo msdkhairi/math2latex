@@ -48,7 +48,7 @@ optimizer = {
 
 
 training = {
-    'epochs': 10
+    'epochs': 20
 }
 
 class Config:
