@@ -4,10 +4,17 @@ from data.dataset import TrainDataset, get_dataloader
 from model.transformer2 import ResNetTransformer
 import logging
 from torch.utils.tensorboard import SummaryWriter
+import torch
+from data.dataset import TrainDataset, get_dataloader
+from model.transformer2 import ResNetTransformer
+import logging
+from torch.utils.tensorboard import SummaryWriter
 
 class Runner:
     def __init__(self, config):
         self.config = config
+
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.train_dataset = TrainDataset(
             self.config.train_dataset.root,
@@ -48,7 +55,7 @@ class Runner:
             sos_index=1,
             eos_index=2,
             pad_index=0
-        )
+        ).to(self.device)
 
         self.loss = torch.nn.CrossEntropyLoss(ignore_index=self.model.pad_index)
 
@@ -64,6 +71,8 @@ class Runner:
     def train_step(self, batch):
         self.optimizer.zero_grad()
         images, targets = batch
+        images = images.to(self.device)
+        targets = targets.to(self.device)
         output = self.model(images, targets[:, :-1])
         loss = self.loss(output, targets[:, 1:])
         loss.backward()
@@ -119,6 +128,8 @@ class Runner:
     def val_step(self, batch):
         with torch.no_grad():
             images, targets = batch
+            images = images.to(self.device)
+            targets = targets.to(self.device)
             output = self.model(images, targets[:, :-1])
             loss = self.loss(output, targets[:, 1:])
             return loss
@@ -126,6 +137,7 @@ class Runner:
     def predict(self, image):
         self.model.eval()
         with torch.no_grad():
+            image = image.to(self.device)
             output = self.model(image)
             return output
             
