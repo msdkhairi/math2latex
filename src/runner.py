@@ -79,6 +79,11 @@ class Runner:
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
+        # Create a console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        logger.addHandler(console_handler)
+
         # Create a TensorBoard writer
         writer = SummaryWriter()
 
