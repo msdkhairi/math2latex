@@ -32,7 +32,7 @@ model = {
     'num_heads': 4,
     'dropout': 0.3,
     'num_decoder_layers': 3,
-    'num_classes': 538,
+    'num_classes': 500,
     'max_len': 150
 }
 

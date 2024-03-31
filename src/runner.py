@@ -62,9 +62,6 @@ class Runner:
             milestones=self.config.optimizer.milestones, 
             gamma=self.config.optimizer.gamma)
 
-    def save_model(self, path):
-        torch.save(self.model.state_dict(), path)
-
     def train_step(self, batch):
         self.optimizer.zero_grad()
         images, targets = batch
@@ -140,6 +137,9 @@ class Runner:
             image = image.to(self.device)
             output = self.model(image)
             return output
+
+    def save_model(self, path):
+        torch.save(self.model.state_dict(), path)
             
                     
     
