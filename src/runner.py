@@ -54,7 +54,9 @@ class Runner:
 
         self.loss = torch.nn.CrossEntropyLoss(ignore_index=self.model.pad_index)
 
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.config.optimizer.lr)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), 
+                                        lr=self.config.optimizer.lr, 
+                                        weight_decay=self.config.optimizer.weight_decay)
         self.lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
             self.optimizer, 
             milestones=self.config.optimizer.milestones, 

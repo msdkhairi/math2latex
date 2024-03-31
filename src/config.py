@@ -30,7 +30,7 @@ model = {
     'd_model': 128,
     'dim_feedforward': 256,
     'num_heads': 4,
-    'dropout': 0.2,
+    'dropout': 0.3,
     'num_decoder_layers': 3,
     'num_classes': 538,
     'max_len': 150
@@ -38,6 +38,7 @@ model = {
 
 optimizer = {
     'lr': 0.001,
+    'weight_decay': 0.0001,
     'milestones': [10],
     'gamma': 0.5
 }
