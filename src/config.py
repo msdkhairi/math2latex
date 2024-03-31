@@ -3,9 +3,7 @@ train_dataset = {
     'images_folder': 'formula_images_processed',
     'label_file': 'im2latex_formulas.norm.lst',
     'data_filter': 'im2latex_train_filter.lst',
-    'transform': 'train',
-    'batch_size': 8,
-    'num_workers': 4
+    'transform': 'train'
 }
 
 val_dataset = {
@@ -13,18 +11,16 @@ val_dataset = {
     'images_folder': 'formula_images_processed',
     'label_file': 'im2latex_formulas.norm.lst',
     'data_filter': 'im2latex_validate_filter.lst',
-    'transform': 'train',
-    'batch_size': 8,
-    'num_workers': 4
+    'transform': 'train'
 }
 
 train_dataloader = {
-    'batch_size': 8,
+    'batch_size': 32,
     'num_workers': 4
 }
 
 val_dataloader = {
-    'batch_size': 8,
+    'batch_size': 32,
     'num_workers': 4
 }
 
@@ -36,7 +32,7 @@ model = {
     'num_heads': 4,
     'dropout': 0.2,
     'num_decoder_layers': 3,
-    'num_classes': 500,
+    'num_classes': 538,
     'max_len': 150
 }
 

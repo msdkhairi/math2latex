@@ -94,18 +94,21 @@ class Runner:
         for epoch in range(self.config.training.epochs):
             epoch_loss = 0
             iter_count = 0
-            for iter, batch in enumerate(self.train_dataloader):
+            for i, batch in enumerate(self.train_dataloader):
                 loss = self.train_step(batch)
+                loss = loss.item()
                 epoch_loss += loss
                 iter_count += 1
-                if iter % 100 == 0 and epoch_loss:
-                    logger.info(f'Epoch: {epoch} - Iteration: {iter} - Loss: {epoch_loss/iter_count}')
-                    writer.add_scalar('Train Loss', epoch_loss/iter_count, epoch * len(self.train_dataloader) + iter)
+                if i % 100 == 0 and epoch_loss:
+                    logger.info(f'Epoch: {epoch} - Iteration: {iter} - Loss: {loss}')
+                    writer.add_scalar('Train Loss', loss, epoch * len(self.train_dataloader) + i)
+                    writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
+            writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
             logger.info(f'Epoch: {epoch} - Train Loss: {epoch_loss/iter_count}')
             
             val_loss = 0
             val_iter_count = 0
-            for iter, batch in enumerate(self.val_dataloader):
+            for i, batch in enumerate(self.val_dataloader):
                 loss = self.val_step(batch)
                 val_loss += loss
                 val_iter_count += 1
@@ -127,7 +130,7 @@ class Runner:
             targets = targets.to(self.device)
             output = self.model(images, targets[:, :-1])
             loss = self.loss(output, targets[:, 1:])
-            return loss
+            return loss.item()
                     
     def predict(self, image):
         self.model.eval()
