@@ -102,7 +102,7 @@ class Runner:
                 epoch_loss += loss
                 iter_count += 1
                 if i % 100 == 0 and epoch_loss:
-                    logger.info(f'Epoch: {epoch} - Iteration: {iter} - Loss: {loss}')
+                    logger.info(f'Epoch: {epoch} - Iteration: {i} - Loss: {loss}')
                     writer.add_scalar('Train Loss', loss, epoch * len(self.train_dataloader) + i)
                     writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
             writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
