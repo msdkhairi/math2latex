@@ -148,7 +148,7 @@ def get_dataloader(dataset, batch_size=8, num_workers=4):
             max_w = max(img.size(2) for img in images)
             
             # Pad images
-            images = [torch.nn.functional.pad(img, (0, max_w - img.size(2), 0, max_h - img.size(1)), value=1) for img in images]
+            images = [1. - torch.nn.functional.pad(img, (0, max_w - img.size(2), 0, max_h - img.size(1)), value=1) for img in images]
             # Resize images
             # images = [torch.nn.functional.interpolate(img.unsqueeze(0), size=(224, 64)).squeeze(0) for img in images]
             
