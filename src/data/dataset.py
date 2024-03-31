@@ -58,7 +58,9 @@ class Tokenizer:
     
     def pad(self, tokens, max_len):
         if len(tokens) > max_len:
-            return tokens[:max_len]
+            tokens = tokens[:max_len]
+            tokens[-1] = '<eos>'
+            return tokens
         return tokens + ['<pad>'] * (max_len - len(tokens))
 
 class BaseDataset(Dataset):
