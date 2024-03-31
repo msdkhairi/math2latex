@@ -4,11 +4,6 @@ from data.dataset import TrainDataset, get_dataloader
 from model.transformer2 import ResNetTransformer
 import logging
 from torch.utils.tensorboard import SummaryWriter
-import torch
-from data.dataset import TrainDataset, get_dataloader
-from model.transformer2 import ResNetTransformer
-import logging
-from torch.utils.tensorboard import SummaryWriter
 
 class Runner:
     def __init__(self, config):
