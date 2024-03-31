@@ -15,12 +15,12 @@ val_dataset = {
 }
 
 train_dataloader = {
-    'batch_size': 32,
+    'batch_size': 128,
     'num_workers': 4
 }
 
 val_dataloader = {
-    'batch_size': 32,
+    'batch_size': 128,
     'num_workers': 4
 }
 
