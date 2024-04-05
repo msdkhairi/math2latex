@@ -48,7 +48,7 @@ def crop(filename, padding=8):
     # Identify bounding box of non-white pixels
     non_white_pixels = np.where(arr < 255)
     if len(non_white_pixels[0]) == 0:
-        print(f"{filename.name} does not contain any text")
+        # print(f"{filename} does not contain any text")
         return None
     y_min, y_max = non_white_pixels[0].min(), non_white_pixels[0].max()
     x_min, x_max = non_white_pixels[1].min(), non_white_pixels[1].max()
@@ -65,10 +65,7 @@ def crop(filename, padding=8):
     return cropped_image
 
 
-def find_and_replace(input_file, output_file):
-    with open(input_file, 'r') as f:
-        data = f.read()
-
+def find_and_replace_line(line):
     # Define the regular expressions for replacements
     patterns = [
         (r'\\left\(', r'('),
@@ -83,11 +80,15 @@ def find_and_replace(input_file, output_file):
 
     # Apply replacements
     for pattern, replacement in patterns:
-        data = re.sub(pattern, replacement, data)
+        line = re.sub(pattern, replacement, line)
 
-    # Write the cleaned data to the output file
-    with open(output_file, 'w') as f:
-        f.write(data)
+    return line
+
+def find_and_replace(input_file, output_file):
+    with open(input_file, 'r') as f_in, open(output_file, 'w') as f_out:
+        for line in f_in:
+            cleaned_line = find_and_replace_line(line)
+            f_out.write(cleaned_line)
 
 
 class Config:

@@ -1,6 +1,6 @@
 import sys, logging, argparse, os
 from pathlib import Path
-import tqdm
+from tqdm import tqdm
 
 import utils
 
@@ -24,7 +24,7 @@ def process_args(args):
     parser.add_argument('--processed-imgs-dir', dest='processed_imgs_dir',
                         type=str, default='formula_images_processed_cropped',
                         help=('Directory containing the processed images. Default=formula_images_processed_cropped'
-                        )
+                        ))
     parser.add_argument('--unk-threshold', dest='unk_threshold',
                         type=int, default=1,
                         help=('If the number of occurences of a token is less than (including) the threshold, then it will be excluded from the generated vocabulary.'
@@ -62,6 +62,7 @@ def main(args):
         "im2latex_formulas.norm.lst": "https://im2markup.yuntiandeng.com/data/im2latex_formulas.norm.lst",
         "im2latex_formulas.tok.lst": "https://im2markup.yuntiandeng.com/data/im2latex_formulas.tok.lst",
         "formula_images_processed.tar.gz": "https://im2markup.yuntiandeng.com/data/formula_images_processed.tar.gz",
+        "formula_images.tar.gz": "https://im2markup.yuntiandeng.com/data/formula_images.tar.gz",
         "im2latex_train_filter.lst": "https://im2markup.yuntiandeng.com/data/im2latex_train_filter.lst",
         "im2latex_validate_filter.lst": "https://im2markup.yuntiandeng.com/data/im2latex_validate_filter.lst",
         "im2latex_test_filter.lst": "https://im2markup.yuntiandeng.com/data/im2latex_test_filter.lst",
@@ -82,38 +83,50 @@ def main(args):
     logging.info("Dataset files downloaded")
 
     # Untar Processed images
-    formula_images_filename = "".join([data_dir, "/formula_images_processed.tar.gz"])
+    # formula_images_filename = "".join([data_dir, "/formula_images_processed.tar.gz"])
+    formula_images_filename = "".join([data_dir, "/formula_images.tar.gz"])
     utils.extract_tarfile(formula_images_filename, data_dir)
     logging.info("Image files unzipped")
     
-    formulas = open(label_path).readlines()
-    vocab = {}
-    max_len = 0
-    with open(train_path) as f:
-        for line in f:
-            _, line_idx = line.strip().split()
-            line_strip = formulas[int(line_idx)].strip()
-            tokens = line_strip.split()
-            tokens_out = []
-            for token in tokens:
-                tokens_out.append(token)
-                if token not in vocab:
-                    vocab[token] = 0
-                vocab[token] += 1
+    # formulas = open(label_path).readlines()
+    # vocab = {}
+    # max_len = 0
+    # with open(train_path) as f:
+    #     for line in f:
+    #         _, line_idx = line.strip().split()
+    #         line_strip = formulas[int(line_idx)].strip()
+    #         tokens = line_strip.split()
+    #         tokens_out = []
+    #         for token in tokens:
+    #             tokens_out.append(token)
+    #             if token not in vocab:
+    #                 vocab[token] = 0
+    #             vocab[token] += 1
 
-    vocab_sort = sorted(list(vocab.keys()))
-    vocab_out = []
-    num_unknown = 0
-    for word in vocab_sort:
-        if vocab[word] > parameters.unk_threshold:
-            vocab_out.append(word)
-        else:
-            num_unknown += 1
-    vocab = [word for word in vocab_out]
+    # vocab_sort = sorted(list(vocab.keys()))
+    # vocab_out = []
+    # num_unknown = 0
+    # for word in vocab_sort:
+    #     if vocab[word] > parameters.unk_threshold:
+    #         vocab_out.append(word)
+    #     else:
+    #         num_unknown += 1
+    # vocab = [word for word in vocab_out]
 
-    with open(vocab_file, 'w') as f:
-        f.write('\n'.join(vocab))
-    logging.info('No. unknowns: %d'%num_unknown)
+    # with open(vocab_file, 'w') as f:
+    #     f.write('\n'.join(vocab))
+    # logging.info('No. unknowns: %d'%num_unknown)
+
+    # cleaning the labels
+    logging.info('Cleaning labels...')
+    # Clean the ground truth file
+    cleaned_file = "im2latex_formulas.norm.processed.lst"
+    cleaned_file = "".join([data_dir, "/", cleaned_file])
+    if not Path(cleaned_file).is_file():
+        print("Cleaning data...")
+        utils.find_and_replace(label_path, cleaned_file)
+    else:
+        print("Cleaned data already exists.")
 
     # preprocess images
     processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
@@ -121,6 +134,9 @@ def main(args):
 
     dataset_dir = "".join([data_dir, "/formula_images_processed"])
     processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
+    # check if the processed images directory exists
+    if not os.path.exists(processed_imgs_dir):
+        os.makedirs(processed_imgs_dir)
 
     # Get a list of all files in the dataset directory
     img_file_list = [filename for filename in os.listdir(dataset_dir) if filename.endswith('.png')]
@@ -130,10 +146,12 @@ def main(args):
     logging.info('Processing images...')
     # Iterate over each PNG file
     for filename in img_file_list:
-        cropped_image = utils.crop(filename)
+        cropped_image = utils.crop(os.path.join(dataset_dir, filename))
         if cropped_image is not None:
             # Save the cropped image
             cropped_image.save(os.path.join(processed_imgs_dir, filename))
+        else:
+            logging.info(f"{filename} does not contain any text")
         # Update the progress bar
         progress_bar.update(1)
 
