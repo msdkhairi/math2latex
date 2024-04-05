@@ -1,24 +1,30 @@
 import sys, logging, argparse, os
 from pathlib import Path
+import tqdm
 
 import utils
+
 
 
 def process_args(args):
     parser = argparse.ArgumentParser(description='Download processed data and generate vocab')
 
     parser.add_argument('--dataset-dir', dest='dataset_dir',
-                        type=str, required=True,
+                        type=str, default='dataset',
                         help=('A directory to download the dataset into'
                         ))
     parser.add_argument('--label-file', dest='label_file',
-                        type=str, required=True,
+                        type=str, default='im2latex_formulas.norm.lst',
                         help=('Input file containing a tokenized formula per line.'
                         ))
     parser.add_argument('--vocab-file', dest='vocab_file',
-                        type=str, required=True,
+                        type=str, default='vocab.json',
                         help=('Vocab file for putting the vocabulary.'
                         ))
+    parser.add_argument('--processed-imgs-dir', dest='processed_imgs_dir',
+                        type=str, default='formula_images_processed_cropped',
+                        help=('Directory containing the processed images. Default=formula_images_processed_cropped'
+                        )
     parser.add_argument('--unk-threshold', dest='unk_threshold',
                         type=int, default=1,
                         help=('If the number of occurences of a token is less than (including) the threshold, then it will be excluded from the generated vocabulary.'
@@ -30,16 +36,6 @@ def process_args(args):
     parameters = parser.parse_args(args)
     return parameters
 
-
-
-
-# BASE_DIR = Path(__file__).resolve().parents[1]
-# print(BASE_DIR)
-# DATASET_DIR = BASE_DIR / "dataset"
-# print(DATASET_DIR)
-# PROCESSED_IMGS_DIR = DATASET_DIR / "formula_images_processed"
-# PROCESSED_IMAGES_DIRNAME = DATA_DIRNAME / "formula_images_processed"
-# VOCAB_FILE = PROJECT_DIRNAME / "image_to_latex" / "data" / "vocab.json"
 
 
 def main(args):
@@ -73,7 +69,6 @@ def main(args):
 
     data_dir = parameters.dataset_dir
     os.makedirs(data_dir, exist_ok=True)
-    # data_dir.mkdir(parents=True, exist_ok=True)
 
     train_path = "".join([data_dir, "/im2latex_train_filter.lst"])
     label_path = "".join([data_dir, "/", parameters.label_file])
@@ -122,9 +117,35 @@ def main(args):
     with open(vocab_file, 'w') as f:
         f.write('\n'.join(vocab))
     logging.info('No. unknowns: %d'%num_unknown)
+
+    # preprocess images
+    processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
+    os.makedirs(processed_imgs_dir, exist_ok=True)
+
+    dataset_dir = "".join([data_dir, "/formula_images_processed"])
+    processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
+
+    # Get a list of all files in the dataset directory
+    img_file_list = [filename for filename in os.listdir(dataset_dir) if filename.endswith('.png')]
+
+    progress_bar = tqdm(total=len(img_file_list), desc='Processing images')
+
+    logging.info('Processing images...')
+    # Iterate over each PNG file
+    for filename in img_file_list:
+        cropped_image = utils.crop(filename)
+        if cropped_image is not None:
+            # Save the cropped image
+            cropped_image.save(os.path.join(processed_imgs_dir, filename))
+        # Update the progress bar
+        progress_bar.update(1)
+
+    progress_bar.close()
+    logging.info('Images processed')
+    logging.info('Script finished')
         
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    logging.info('Script finished')
+    
     
