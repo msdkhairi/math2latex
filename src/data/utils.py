@@ -1,6 +1,7 @@
 import os
 import tarfile
 from urllib.request import urlretrieve
+import re
 
 import numpy as np
 from PIL import Image
@@ -63,6 +64,30 @@ def crop(filename, padding=8):
     cropped_image = Image.fromarray(cropped)
     return cropped_image
 
+
+def find_and_replace(input_file, output_file):
+    with open(input_file, 'r') as f:
+        data = f.read()
+
+    # Define the regular expressions for replacements
+    patterns = [
+        (r'\\left\(', r'('),
+        (r'\\right\)', r')'),
+        (r'\\left\[', r'['),
+        (r'\\right\]', r']'),
+        (r'\\left\{', r'{'),
+        (r'\\right\}', r'}'),
+        (r'\\vspace(\*)?\{[0-9a-zA-Z.~-]*[^}]*\}', ''),
+        (r'\\hspace(\*)?\{[0-9a-zA-Z.~-]*[^}]*\}', '')
+    ]
+
+    # Apply replacements
+    for pattern, replacement in patterns:
+        data = re.sub(pattern, replacement, data)
+
+    # Write the cleaned data to the output file
+    with open(output_file, 'w') as f:
+        f.write(data)
 
 
 class Config:

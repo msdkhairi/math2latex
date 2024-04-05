@@ -84,11 +84,8 @@ def main(args):
     # Untar Processed images
     formula_images_filename = "".join([data_dir, "/formula_images_processed.tar.gz"])
     utils.extract_tarfile(formula_images_filename, data_dir)
-    # if not PROCESSED_IMGS_DIR.exists():
-        # PROCESSED_IMGS_DIR.mkdir(parents=True, exist_ok=True)
     logging.info("Image files unzipped")
     
-
     formulas = open(label_path).readlines()
     vocab = {}
     max_len = 0
