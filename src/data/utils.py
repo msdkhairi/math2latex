@@ -2,6 +2,8 @@ import os
 import tarfile
 from urllib.request import urlretrieve
 import re
+from tqdm import tqdm
+from multiprocessing import Pool
 
 import numpy as np
 from PIL import Image
@@ -90,6 +92,33 @@ def find_and_replace(input_file, output_file):
             cleaned_line = find_and_replace_line(line)
             f_out.write(cleaned_line)
 
+
+def process_image(args):
+    filename, dataset_dir, processed_imgs_dir = args
+    cropped_image = crop(os.path.join(dataset_dir, filename))
+    if cropped_image is not None:
+        # Save the cropped image
+        cropped_image.save(os.path.join(processed_imgs_dir, filename))
+    else:
+        print(f"{filename} does not contain any text")
+
+def process_images(dataset_dir, processed_imgs_dir):
+    # check if the processed images directory exists
+    if not os.path.exists(processed_imgs_dir):
+        os.makedirs(processed_imgs_dir)
+    
+    # Get a list of all files in the dataset directory
+    img_file_list = [filename for filename in os.listdir(dataset_dir) if filename.endswith('.png')]
+    
+    print('Processing images...')
+    args_list = [(filename, dataset_dir, processed_imgs_dir) for filename in img_file_list]
+    with Pool() as pool:
+        # Use tqdm to track progress
+        with tqdm(total=len(img_file_list), desc='Processing images') as progress_bar:
+            for _ in pool.imap_unordered(process_image, args_list):
+                progress_bar.update()
+
+    
 
 class Config:
     def __init__(self, dictionary):

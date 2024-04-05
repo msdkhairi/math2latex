@@ -1,6 +1,6 @@
 import sys, logging, argparse, os
 from pathlib import Path
-from tqdm import tqdm
+
 
 import utils
 
@@ -22,7 +22,7 @@ def process_args(args):
                         help=('Vocab file for putting the vocabulary.'
                         ))
     parser.add_argument('--processed-imgs-dir', dest='processed_imgs_dir',
-                        type=str, default='formula_images_processed_cropped',
+                        type=str, default='formula_images_processed',
                         help=('Directory containing the processed images. Default=formula_images_processed_cropped'
                         ))
     parser.add_argument('--unk-threshold', dest='unk_threshold',
@@ -61,7 +61,7 @@ def main(args):
     DATASET_DICT = {
         "im2latex_formulas.norm.lst": "https://im2markup.yuntiandeng.com/data/im2latex_formulas.norm.lst",
         "im2latex_formulas.tok.lst": "https://im2markup.yuntiandeng.com/data/im2latex_formulas.tok.lst",
-        "formula_images_processed.tar.gz": "https://im2markup.yuntiandeng.com/data/formula_images_processed.tar.gz",
+        # "formula_images_processed.tar.gz": "https://im2markup.yuntiandeng.com/data/formula_images_processed.tar.gz",
         "formula_images.tar.gz": "https://im2markup.yuntiandeng.com/data/formula_images.tar.gz",
         "im2latex_train_filter.lst": "https://im2markup.yuntiandeng.com/data/im2latex_train_filter.lst",
         "im2latex_validate_filter.lst": "https://im2markup.yuntiandeng.com/data/im2latex_validate_filter.lst",
@@ -132,33 +132,36 @@ def main(args):
     processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
     os.makedirs(processed_imgs_dir, exist_ok=True)
 
-    dataset_dir = "".join([data_dir, "/formula_images_processed"])
+    dataset_dir = "".join([data_dir, "/formula_images"])
     processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
-    # check if the processed images directory exists
-    if not os.path.exists(processed_imgs_dir):
-        os.makedirs(processed_imgs_dir)
 
-    # Get a list of all files in the dataset directory
-    img_file_list = [filename for filename in os.listdir(dataset_dir) if filename.endswith('.png')]
+    utils.process_images(dataset_dir, processed_imgs_dir)
+    
+    # # check if the processed images directory exists
+    # if not os.path.exists(processed_imgs_dir):
+    #     os.makedirs(processed_imgs_dir)
+    #     # Get a list of all files in the dataset directory
+    #     img_file_list = [filename for filename in os.listdir(dataset_dir) if filename.endswith('.png')]
 
-    progress_bar = tqdm(total=len(img_file_list), desc='Processing images')
+    #     progress_bar = tqdm(total=len(img_file_list), desc='Processing images')
 
-    logging.info('Processing images...')
-    # Iterate over each PNG file
-    for filename in img_file_list:
-        cropped_image = utils.crop(os.path.join(dataset_dir, filename))
-        if cropped_image is not None:
-            # Save the cropped image
-            cropped_image.save(os.path.join(processed_imgs_dir, filename))
-        else:
-            logging.info(f"{filename} does not contain any text")
-        # Update the progress bar
-        progress_bar.update(1)
+    #     logging.info('Processing images...')
+    #     # Iterate over each PNG file
+    #     for filename in img_file_list:
+    #         cropped_image = utils.crop(os.path.join(dataset_dir, filename))
+    #         if cropped_image is not None:
+    #             # Save the cropped image
+    #             cropped_image.save(os.path.join(processed_imgs_dir, filename))
+    #         else:
+    #             logging.info(f"{filename} does not contain any text")
+    #         # Update the progress bar
+    #         progress_bar.update(1)
+    # progress_bar.close()
 
-    progress_bar.close()
     logging.info('Images processed')
     logging.info('Script finished')
-        
+
+      
 
 if __name__ == "__main__":
     main(sys.argv[1:])
