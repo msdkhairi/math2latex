@@ -4,8 +4,7 @@ venv/
 myenv/
 dataset/
 
-test.ipynb
-
+playground.ipynb
 log.txt
 
 src_old/
@@ -15,7 +14,5 @@ src_old/
 runs/
 
 *.log
-
-playground.ipynb
 
 *.ipynb
