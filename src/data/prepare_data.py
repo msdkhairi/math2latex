@@ -83,39 +83,9 @@ def main(args):
     logging.info("Dataset files downloaded")
 
     # Untar Processed images
-    # formula_images_filename = "".join([data_dir, "/formula_images_processed.tar.gz"])
     formula_images_filename = "".join([data_dir, "/formula_images.tar.gz"])
     utils.extract_tarfile(formula_images_filename, data_dir)
     logging.info("Image files unzipped")
-    
-    # formulas = open(label_path).readlines()
-    # vocab = {}
-    # max_len = 0
-    # with open(train_path) as f:
-    #     for line in f:
-    #         _, line_idx = line.strip().split()
-    #         line_strip = formulas[int(line_idx)].strip()
-    #         tokens = line_strip.split()
-    #         tokens_out = []
-    #         for token in tokens:
-    #             tokens_out.append(token)
-    #             if token not in vocab:
-    #                 vocab[token] = 0
-    #             vocab[token] += 1
-
-    # vocab_sort = sorted(list(vocab.keys()))
-    # vocab_out = []
-    # num_unknown = 0
-    # for word in vocab_sort:
-    #     if vocab[word] > parameters.unk_threshold:
-    #         vocab_out.append(word)
-    #     else:
-    #         num_unknown += 1
-    # vocab = [word for word in vocab_out]
-
-    # with open(vocab_file, 'w') as f:
-    #     f.write('\n'.join(vocab))
-    # logging.info('No. unknowns: %d'%num_unknown)
 
     # cleaning the labels
     logging.info('Cleaning labels...')
@@ -135,29 +105,9 @@ def main(args):
     dataset_dir = "".join([data_dir, "/formula_images"])
     processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
 
+    logging.info('Processing images...')
     utils.process_images(dataset_dir, processed_imgs_dir)
     
-    # # check if the processed images directory exists
-    # if not os.path.exists(processed_imgs_dir):
-    #     os.makedirs(processed_imgs_dir)
-    #     # Get a list of all files in the dataset directory
-    #     img_file_list = [filename for filename in os.listdir(dataset_dir) if filename.endswith('.png')]
-
-    #     progress_bar = tqdm(total=len(img_file_list), desc='Processing images')
-
-    #     logging.info('Processing images...')
-    #     # Iterate over each PNG file
-    #     for filename in img_file_list:
-    #         cropped_image = utils.crop(os.path.join(dataset_dir, filename))
-    #         if cropped_image is not None:
-    #             # Save the cropped image
-    #             cropped_image.save(os.path.join(processed_imgs_dir, filename))
-    #         else:
-    #             logging.info(f"{filename} does not contain any text")
-    #         # Update the progress bar
-    #         progress_bar.update(1)
-    # progress_bar.close()
-
     logging.info('Images processed')
     logging.info('Script finished')
 

@@ -100,7 +100,7 @@ def process_image(args):
         # Save the cropped image
         cropped_image.save(os.path.join(processed_imgs_dir, filename))
     else:
-        print(f"{filename} does not contain any text")
+        print(f"\n{filename} does not contain any text")
 
 def process_images(dataset_dir, processed_imgs_dir):
     # check if the processed images directory exists
@@ -124,5 +124,3 @@ class Config:
     def __init__(self, dictionary):
         for key, value in dictionary.items():
             setattr(self, key, value)
-
-

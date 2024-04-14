@@ -18,8 +18,8 @@ import json
 
 class Tokenizer:
     def __init__(self, formulas, max_len=150):
-        # self.tokenizer = get_tokenizer("basic_english")
-        self.tokenizer = get_tokenizer(None)
+        self.tokenizer = get_tokenizer("basic_english")
+        # self.tokenizer = get_tokenizer(None)
         self.formulas = formulas
         self.vocab = self._build_vocab(formulas)
         self.vocab.set_default_index(self.vocab['<unk>'])

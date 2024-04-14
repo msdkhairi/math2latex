@@ -33,7 +33,7 @@ class ResNetTransformer(nn.Module):
         self.backbone = nn.Sequential(*list(resnet18.children())[:-2])
 
         self.conv1x1 = nn.Conv2d(512, d_model, kernel_size=1, stride=1, padding=0)
-        self.encoder_pos_enc = PositionalEncoding2D(d_model, dropout=pos_enc_dropout, max_len=max_len)
+        self.encoder_pos_enc = PositionalEncoding2D(d_model)
 
         # Decoder
         self.embedding = nn.Embedding(num_classes, d_model)
