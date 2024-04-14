@@ -106,16 +106,15 @@ class BaseDataset(Dataset):
 
 class TrainDataset(BaseDataset):
     def __init__(self, dataset_root, images_folder, label_file, data_filter, transform='train'):
-        # padding = (0, 0, 224, 224) # pad the right and bottom sides
         if transform == 'train':
             transform = transforms.Compose([
-                # transforms.Pad(padding),
-                # transforms.Resize((224, 224)),
-                transforms.ToTensor()
+                transforms.RandomApply([transforms.RandomAffine(degrees=(-1, 1), scale=(0.6, 1.0), fill=255)], p=0.5),
+                transforms.RandomApply([transforms.Lambda(lambda x: self.gaussian_noise(x))], p=0.5),
+                transforms.RandomApply([transforms.GaussianBlur(kernel_size=1, sigma=0.5)], p=0.5),
+                transforms.ToTensor(),
             ])
         elif transform == 'test':
             transform = transforms.Compose([
-                # transforms.Resize((224, 64)),
                 transforms.ToTensor()
             ])
         else:

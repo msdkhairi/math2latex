@@ -49,8 +49,9 @@ def crop(filename, padding=8):
 
     # Identify bounding box of non-white pixels
     non_white_pixels = np.where(arr < 255)
-    # if len(non_white_pixels[0]) == 0:
-    #     return None
+    if len(non_white_pixels[0]) == 0:
+        # return a white image
+        return Image.new('L', (128, 64), 255)
     y_min, y_max = non_white_pixels[0].min(), non_white_pixels[0].max()
     x_min, x_max = non_white_pixels[1].min(), non_white_pixels[1].max()
 
