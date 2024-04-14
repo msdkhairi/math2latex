@@ -11,11 +11,6 @@ from torchtext.vocab import vocab
 import torchvision.transforms as transforms
 
 
-from typing import Callable, Dict, List, Optional, Tuple, Union
-from pathlib import Path
-import json
-
-
 class Tokenizer:
     def __init__(self, formulas, max_len=150):
         self.tokenizer = get_tokenizer("basic_english")

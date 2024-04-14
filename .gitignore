@@ -15,3 +15,5 @@ src_old/
 runs/
 
 *.log
+
+playground.ipynb
