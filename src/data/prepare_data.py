@@ -30,7 +30,7 @@ def process_args(args):
                         help=('If the number of occurences of a token is less than (including) the threshold, then it will be excluded from the generated vocabulary.'
                         ))
     parser.add_argument('--log-path', dest="log_path",
-                        type=str, default='log.txt',
+                        type=str, default='prep_data.log',
                         help=('Log file path, default=log.txt' 
                         ))
     parameters = parser.parse_args(args)
