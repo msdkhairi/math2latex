@@ -11,7 +11,7 @@ val_dataset = {
     'images_folder': 'formula_images_processed',
     'label_file': 'im2latex_formulas.norm.lst',
     'data_filter': 'im2latex_validate_filter.lst',
-    'transform': 'train'
+    'transform': 'test'
 }
 
 train_dataloader = {
@@ -28,11 +28,11 @@ val_dataloader = {
 
 model = {
     'd_model': 128,
-    'dim_feedforward': 256,
     'num_heads': 4,
-    'dropout': 0.3,
     'num_decoder_layers': 3,
-    'num_classes': 500,
+    'dim_feedforward': 256,
+    'dropout': 0.3,
+    'num_classes': 462,
     'max_len': 150
 }
 
