@@ -45,13 +45,20 @@ class Tokenizer:
         # add the bos and eos to begining and end of the tokens
         return [self.vocab[token] for token in tokens]
     
-    def decode(self, tokens):
+    def decode(self, indices):
         # remove the bos and eos tokens
         # if tokens[0] == self.vocab['<bos>']:
         #     tokens = tokens[1:]
         # if tokens[-1] == self.vocab['<eos>']:
         #     tokens = tokens[:-1]
-        return self.vocab.lookup_tokens(tokens)
+        return self.vocab.lookup_tokens(indices)
+
+    def decode(self, indices):
+        cleaned_indices = [index for index in indices if index not in self.ignore_indices]
+        if self.vocab['<eos>'] in cleaned_indices:
+            cleaned_indices = cleaned_indices[:cleaned_indices.index(self.vocab['<eos>'])]
+        return self.vocab.lookup_tokens(cleaned_indices)
+
     
     def pad(self, tokens, max_len):
         if len(tokens) > max_len:
@@ -59,6 +66,15 @@ class Tokenizer:
             tokens[-1] = '<eos>'
             return tokens
         return tokens + ['<pad>'] * (max_len - len(tokens))
+    
+    def decode_to_string(self, tokens):
+        # remove pad, bos, eos tokens
+        cleaned_tokens = [token for token in tokens if token not in self.ignore_indices]
+        # if eos token is seen, remove the rest
+        if self.vocab['<eos>'] in cleaned_tokens:
+            cleaned_tokens = cleaned_tokens[:cleaned_tokens.index(self.vocab['<eos>'])]
+        decoded = self.vocab.lookup_tokens(cleaned_tokens)
+        return ''.join(decoded)
 
 class BaseDataset(Dataset):
     def __init__(self, dataset_root, images_folder, label_file, data_filter, transform=None):

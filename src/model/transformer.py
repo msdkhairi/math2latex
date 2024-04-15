@@ -106,12 +106,15 @@ class ResNetTransformer(nn.Module):
     
 
     def predict(self, x):
+        b = x.size(0)
         x = self.encode(x)
-        tgt = torch.zeros(self.max_len_output_, x.size(1)).long().to(x.device)
-        for i in range(self.max_len_output):
-            output = self.decode(tgt[:i+1], x)
-            output = self.fc(output)
-            output = output[-1].argmax()
-            tgt[i] = output
-        return tgt.permute(1, 0)    
+
+        tgt = torch.zeros((b, self.max_len_output), dtype=torch.long).to(x.device)
+        tgt[:, 0] = 1
+        for t in range(1, self.max_len_output):
+            output = self.decode(tgt[:, :t], x)
+            output = output.argmax(dim=-1)
+            tgt[:, t] = output[-1:] 
+
+        return tgt
     
