@@ -68,12 +68,7 @@ class Tokenizer:
         return tokens + ['<pad>'] * (max_len - len(tokens))
     
     def decode_to_string(self, tokens):
-        # remove pad, bos, eos tokens
-        cleaned_tokens = [token for token in tokens if token not in self.ignore_indices]
-        # if eos token is seen, remove the rest
-        if self.vocab['<eos>'] in cleaned_tokens:
-            cleaned_tokens = cleaned_tokens[:cleaned_tokens.index(self.vocab['<eos>'])]
-        decoded = self.vocab.lookup_tokens(cleaned_tokens)
+        decoded = self.decode(tokens)
         return ''.join(decoded)
 
 class BaseDataset(Dataset):
