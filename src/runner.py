@@ -138,7 +138,7 @@ class Runner:
 
             self.lr_scheduler.step()
 
-            self.save_model(f'model_epoch_{epoch}.pth')
+            self.save_model(f'runs/model_epoch_{epoch}.pth')
 
         # Close the TensorBoard writer
         writer.close()
