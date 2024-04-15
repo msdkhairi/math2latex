@@ -27,7 +27,7 @@ class ResNetTransformer(nn.Module):
         self.max_len_output = max_len_output
 
         # Encoder
-        resnet18 = torchvision.models.resnet18(pretrained=True)
+        resnet18 = torchvision.models.resnet18(weights=None)
 
         # Remove the classification head and layer 4 from resnt18 and keep the first 3 layers
         self.backbone = nn.Sequential(*list(resnet18.children())[:-3])
