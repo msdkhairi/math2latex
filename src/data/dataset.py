@@ -13,6 +13,8 @@ from torchtext.vocab import vocab
 
 import torchvision.transforms as transforms
 
+from .utils import get_formulas
+
 
 class Tokenizer:
     def __init__(self, formulas, max_len=150):
@@ -141,7 +143,10 @@ class TrainDataset(BaseDataset):
         return noisy_tensor
 
 
-def get_dataloader(dataset, tokenizer, batch_size=8, num_workers=4, shuffle=True):
+def get_dataloader(dataset, tokenizer=None, batch_size=8, num_workers=4, shuffle=True):
+    # if tokenizer is None:
+    #     all_formuals = get_formulas('dataset/im2latex_formulas.norm.processed.lst')
+    #     tokenizer = Tokenizer(all_formuals)
     def collate_fn_creator(tokenizer):
         def collate_fn(batch):
             images, formulas = zip(*batch)

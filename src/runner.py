@@ -1,15 +1,22 @@
 import torch
 
 from data.dataset import TrainDataset, get_dataloader
-from model.transformer2 import ResNetTransformer
+from model.transformer import ResNetTransformer
 import logging
 from torch.utils.tensorboard import SummaryWriter
+from data.utils import get_formulas
+from data.dataset import Tokenizer
+
+from tqdm import tqdm
 
 class Runner:
     def __init__(self, config):
         self.config = config
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        _all_formuals = get_formulas('dataset/im2latex_formulas.norm.processed.lst')
+        self.tokenizer = Tokenizer(_all_formuals)
 
         self.train_dataset = TrainDataset(
             self.config.train_dataset.root,
@@ -20,9 +27,10 @@ class Runner:
         )
         
         self.train_dataloader = get_dataloader(
-            self.train_dataset,
-            self.config.train_dataloader.batch_size,
-            self.config.train_dataloader.num_workers,
+            dataset=self.train_dataset,
+            tokenizer=self.tokenizer,
+            batch_size=self.config.train_dataloader.batch_size,
+            num_workers=self.config.train_dataloader.num_workers,
         )
 
         self.val_dataset = TrainDataset(
@@ -34,9 +42,10 @@ class Runner:
         )
 
         self.val_dataloader = get_dataloader(
-            self.val_dataset,
-            self.config.val_dataloader.batch_size,
-            self.config.val_dataloader.num_workers,
+            dataset=self.val_dataset,
+            tokenizer=self.tokenizer,
+            batch_size=self.config.val_dataloader.batch_size,
+            num_workers=self.config.val_dataloader.num_workers,
         )
 
         self.model = ResNetTransformer(
@@ -46,13 +55,10 @@ class Runner:
             dropout=self.config.model.dropout,
             num_decoder_layers=self.config.model.num_decoder_layers,
             num_classes=self.config.model.num_classes,
-            max_output_len=self.config.model.max_len,
-            sos_index=1,
-            eos_index=2,
-            pad_index=0
+            max_len_output=self.config.model.max_len
         ).to(self.device)
 
-        self.loss = torch.nn.CrossEntropyLoss(ignore_index=self.model.pad_index)
+        self.loss = torch.nn.CrossEntropyLoss(ignore_index=self.tokenizer.ignore_indices)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), 
                                         lr=self.config.optimizer.lr, 
@@ -94,17 +100,33 @@ class Runner:
         for epoch in range(self.config.training.epochs):
             epoch_loss = 0
             iter_count = 0
-            for i, batch in enumerate(self.train_dataloader):
+            pbar = tqdm(self.train_dataloader, desc=f'Epoch {epoch}')
+            for i, batch in enumerate(pbar):
                 loss = self.train_step(batch)
                 loss = loss.item()
                 epoch_loss += loss
                 iter_count += 1
+                pbar.set_postfix({'loss': loss})
                 if i % 100 == 0 and epoch_loss:
-                    logger.info(f'Epoch: {epoch} - Iteration: {i} - Loss: {loss}')
                     writer.add_scalar('Train Loss', loss, epoch * len(self.train_dataloader) + i)
                     writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
             writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
-            logger.info(f'Epoch: {epoch} - Train Loss: {epoch_loss/iter_count}')
+            pbar.close()
+
+        # for epoch in range(self.config.training.epochs):
+        #     epoch_loss = 0
+        #     iter_count = 0
+        #     for i, batch in enumerate(self.train_dataloader):
+        #         loss = self.train_step(batch)
+        #         loss = loss.item()
+        #         epoch_loss += loss
+        #         iter_count += 1
+        #         if i % 100 == 0 and epoch_loss:
+        #             logger.info(f'Epoch: {epoch} - Iteration: {i} - Loss: {loss}')
+        #             writer.add_scalar('Train Loss', loss, epoch * len(self.train_dataloader) + i)
+        #             writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
+        #     writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
+        #     logger.info(f'Epoch: {epoch} - Train Loss: {epoch_loss/iter_count}')
             
             val_loss = 0
             val_iter_count = 0
