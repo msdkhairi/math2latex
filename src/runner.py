@@ -111,22 +111,7 @@ class Runner:
                     writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
             writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
             pbar.close()
-
-        # for epoch in range(self.config.training.epochs):
-        #     epoch_loss = 0
-        #     iter_count = 0
-        #     for i, batch in enumerate(self.train_dataloader):
-        #         loss = self.train_step(batch)
-        #         loss = loss.item()
-        #         epoch_loss += loss
-        #         iter_count += 1
-        #         if i % 100 == 0 and epoch_loss:
-        #             logger.info(f'Epoch: {epoch} - Iteration: {i} - Loss: {loss}')
-        #             writer.add_scalar('Train Loss', loss, epoch * len(self.train_dataloader) + i)
-        #             writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
-        #     writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
-        #     logger.info(f'Epoch: {epoch} - Train Loss: {epoch_loss/iter_count}')
-            
+             
             val_loss = 0
             val_iter_count = 0
             for i, batch in enumerate(self.val_dataloader):
