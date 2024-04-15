@@ -67,7 +67,7 @@ def crop(filename, padding=8):
     return cropped_image
 
 
-def find_and_replace_line(line):
+def replace_similar_tokens(line):
     # Define the regular expressions for replacements
     patterns = [
         (r'\\left\(', r'('),
@@ -89,7 +89,7 @@ def find_and_replace_line(line):
 def find_and_replace(input_file, output_file):
     with open(input_file, 'r') as f_in, open(output_file, 'w') as f_out:
         for line in f_in:
-            cleaned_line = find_and_replace_line(line)
+            cleaned_line = replace_similar_tokens(line)
             f_out.write(cleaned_line)
 
 

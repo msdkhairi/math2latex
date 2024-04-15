@@ -1,4 +1,7 @@
 import os
+import random
+
+import numpy as np
 
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -33,22 +36,18 @@ class Tokenizer:
     
     def encode(self, formula, with_padding=False):
         tokens = self.tokenizer(formula)
-        # add the bos and eos to begining and end of the tokens
         tokens = ['<bos>'] + tokens + ['<eos>']
-        type(tokens)
-        # add padding upto max length if max_len - len(tokens) > 0
-        # tokens += ['<pad>'] * (max_len - len(tokens))
         if with_padding:
             tokens = self.pad(tokens, self.max_len)
+        # add the bos and eos to begining and end of the tokens
         return [self.vocab[token] for token in tokens]
     
     def decode(self, tokens):
         # remove the bos and eos tokens
-        # tokens = tokens[1:-1]
-        if tokens[0] == self.vocab['<bos>']:
-            tokens = tokens[1:]
-        if tokens[-1] == self.vocab['<eos>']:
-            tokens = tokens[:-1]
+        # if tokens[0] == self.vocab['<bos>']:
+        #     tokens = tokens[1:]
+        # if tokens[-1] == self.vocab['<eos>']:
+        #     tokens = tokens[:-1]
         return self.vocab.lookup_tokens(tokens)
     
     def pad(self, tokens, max_len):
@@ -69,7 +68,7 @@ class BaseDataset(Dataset):
         # load the data in self.image_filenames and self.formulas 
         self._load_data(self.data_filter)
 
-        self.tokenizer = Tokenizer(self.formulas)
+        # self.tokenizer = Tokenizer(self.formulas)
 
     def _load_data(self, data_filter=None):
         # Read the formulas
@@ -121,17 +120,28 @@ class TrainDataset(BaseDataset):
             raise ValueError("Invalid transform argument. Must be either 'train' or 'test'")
         super().__init__(dataset_root, images_folder, label_file, data_filter, transform)
 
+    def gaussian_noise(self, tensor, mean=0, var_range=(10, 50)):
+        var = random.uniform(var_range[0], var_range[1])
 
-def get_dataloader(dataset, batch_size=8, num_workers=4):
-    # def collate_fn_creator(tokenizer):
-    #     def collate_fn(batch):
-    #         images, formulas = zip(*batch)
-    #         formulas = [tokenizer.encode(formula, with_padding=True) for formula in formulas]
-    #         images = torch.stack(images)
-    #         formulas = torch.tensor(formulas)
-    #         return images, formulas
-    #     return collate_fn
-    
+        # Convert PIL image to numpy array
+        tensor_array = np.array(tensor)
+        
+        # Generate Gaussian noise
+        noise = np.random.normal(mean, var, tensor_array.shape)
+        
+        # Add noise to the image
+        noisy_array = tensor_array + noise
+        
+        # Clip the values to [0, 255]
+        noisy_array = np.clip(noisy_array, 0, 255)
+        
+        # Convert numpy array back to PIL image
+        noisy_tensor = Image.fromarray(np.uint8(noisy_array))
+        
+        return noisy_tensor
+
+
+def get_dataloader(dataset, tokenizer, batch_size=8, num_workers=4, shuffle=True):
     def collate_fn_creator(tokenizer):
         def collate_fn(batch):
             images, formulas = zip(*batch)
@@ -143,15 +153,13 @@ def get_dataloader(dataset, batch_size=8, num_workers=4):
             
             # Pad images
             images = [1. - torch.nn.functional.pad(img, (0, max_w - img.size(2), 0, max_h - img.size(1)), value=1) for img in images]
-            # Resize images
-            # images = [torch.nn.functional.interpolate(img.unsqueeze(0), size=(224, 64)).squeeze(0) for img in images]
             
             images = torch.stack(images)
             formulas = torch.tensor(formulas)
             return images, formulas
         return collate_fn
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, 
-                            num_workers=num_workers, collate_fn=collate_fn_creator(dataset.tokenizer))
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, 
+                            num_workers=num_workers, collate_fn=collate_fn_creator(tokenizer))
     return dataloader
 
     
