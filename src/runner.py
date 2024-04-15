@@ -111,7 +111,7 @@ class Runner:
                     writer.add_scalar('Learning Rate', self.optimizer.param_groups[0]['lr'], epoch * len(self.train_dataloader) + i)
             writer.add_scalar('Train Loss Epoch', epoch_loss/iter_count, epoch)
             pbar.close()
-             
+
             val_loss = 0
             val_iter_count = 0
             for i, batch in enumerate(self.val_dataloader):
@@ -123,6 +123,9 @@ class Runner:
 
             self.lr_scheduler.step()
 
+            # check if runs directory exists otherwise create it
+            if not os.path.exists('runs'):
+                os.makedirs('runs')
             self.save_model(f'runs/model_epoch_{epoch+1}.pth')
 
         # Close the TensorBoard writer
