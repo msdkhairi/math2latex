@@ -16,7 +16,8 @@ class PositionalEncoding1D(nn.Module):
         self.encoding = self.encoding.unsqueeze(1)
     
     def forward(self, x):
-        x = x + self.encoding[:x.size(0)]
+        self.encoding = self.encoding.to(x.device)
+        x = x + self.encoding[:x.size(0)].detach()
         return self.dropout(x)
     
 
@@ -39,5 +40,6 @@ class PositionalEncoding2D(nn.Module):
         self.encoding = self.encoding.permute(2, 0, 1)
 
     def forward(self, x):
-        x = x + self.encoding[:, :x.size(2), :x.size(3)]
+        self.encoding = self.encoding.to(x.device)
+        x = x + self.encoding[:, :x.size(2), :x.size(3)].detach()
         return self.dropout(x)

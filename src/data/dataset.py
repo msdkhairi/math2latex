@@ -24,6 +24,7 @@ class Tokenizer:
         self.vocab = self._build_vocab(formulas)
         self.vocab.set_default_index(self.vocab['<unk>'])
         self.max_len = max_len
+        self.ignore_index = self.vocab['<pad>']
         self.ignore_indices = {self.vocab['<pad>'], self.vocab['<bos>'], self.vocab['<eos>'], self.vocab['<unk>']}
 
     def __len__(self):

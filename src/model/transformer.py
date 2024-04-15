@@ -33,11 +33,16 @@ class ResNetTransformer(nn.Module):
         self.backbone = nn.Sequential(*list(resnet18.children())[:-3])
 
         self.conv1x1 = nn.Conv2d(256, d_model, kernel_size=1, stride=1, padding=0)
-        self.encoder_pos_enc = PositionalEncoding2D(d_model, max_h=1000, max_w=1000, dropout=pos_enc_dropout) # no images are larger than 1000x1000
+        self.encoder_pos_enc = PositionalEncoding2D(d_model, 
+                                                    max_h=1000, 
+                                                    max_w=1000, 
+                                                    dropout=pos_enc_dropout) # no images are larger than 1000x1000
 
         # Decoder
         self.embedding = nn.Embedding(num_classes, d_model)
-        self.decoder_pos_enc = PositionalEncoding1D(d_model, max_len=max_len_output, dropout=pos_enc_dropout)
+        self.decoder_pos_enc = PositionalEncoding1D(d_model, 
+                                                    max_len=max_len_output, 
+                                                    dropout=pos_enc_dropout)
         _transformer_decoder_layer = nn.TransformerDecoderLayer(d_model=d_model, 
                                                                 nhead=num_heads, 
                                                                 dim_feedforward=dim_feedforward, 

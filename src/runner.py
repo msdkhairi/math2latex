@@ -58,7 +58,7 @@ class Runner:
             max_len_output=self.config.model.max_len
         ).to(self.device)
 
-        self.loss = torch.nn.CrossEntropyLoss(ignore_index=self.tokenizer.ignore_indices)
+        self.loss = torch.nn.CrossEntropyLoss(ignore_index=self.tokenizer.ignore_index)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), 
                                         lr=self.config.optimizer.lr, 
