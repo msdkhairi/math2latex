@@ -78,7 +78,7 @@ class Runner:
         loss = self.loss(output, targets[:, 1:])
         loss.backward()
         self.optimizer.step()
-        return loss
+        return loss.item()
     
     def train(self):
         # Create a logger
@@ -103,7 +103,6 @@ class Runner:
             pbar = tqdm(self.train_dataloader, desc=f'Epoch {epoch}')
             for i, batch in enumerate(pbar):
                 loss = self.train_step(batch)
-                loss = loss.item()
                 epoch_loss += loss
                 iter_count += 1
                 pbar.set_postfix({'loss': loss})
