@@ -63,3 +63,7 @@ To run the demo, run the following command in the root directory of the reposito
 python demo.py
 ```
 This command runs a demo of the tool, allowing you to see its functionality in action.
+
+### License
+
+math2latex is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.

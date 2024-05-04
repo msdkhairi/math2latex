@@ -4,8 +4,6 @@ from pathlib import Path
 
 import utils
 
-
-
 def process_args(args):
     parser = argparse.ArgumentParser(description='Download processed data and generate vocab')
 
@@ -38,7 +36,7 @@ def process_args(args):
 
 
 
-def main(args):
+def prepare_data(args):
 
     parameters = process_args(args)
 
@@ -114,6 +112,6 @@ def main(args):
       
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    prepare_data(sys.argv[1:])
     
     
