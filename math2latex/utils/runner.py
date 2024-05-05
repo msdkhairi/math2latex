@@ -14,7 +14,7 @@ class LitMathToLatex(L.LightningModule):
         self.config = config
 
         self.tokenizer = Tokenizer()
-        self.tokenizer.load_vocab("dataset/tokenizer_vocab.json")
+        self.tokenizer.load_vocab("tokenizer_vocab.json")
 
         self.model = ResNetTransformer(
             d_model=self.config.model.d_model,

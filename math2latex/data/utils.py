@@ -95,12 +95,16 @@ def find_and_replace(input_file, output_file):
 
 def process_image(args):
     filename, dataset_dir, processed_imgs_dir = args
-    cropped_image = crop(os.path.join(dataset_dir, filename))
+    image_path = os.path.join(dataset_dir, filename)
+    cropped_image = crop(image_path)
     if cropped_image is not None:
         # Save the cropped image
         cropped_image.save(os.path.join(processed_imgs_dir, filename))
     else:
         print(f"\n{filename} does not contain any text")
+    # if os.path.exists(image_path):
+    #     os.remove(image_path)
+
 
 def process_images(dataset_dir, processed_imgs_dir):
     # check if the processed images directory exists

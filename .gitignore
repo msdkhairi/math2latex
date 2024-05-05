@@ -17,4 +17,6 @@ runs/
 
 *.ipynb
 
+tokenizer_vocab.json
+
 logs/

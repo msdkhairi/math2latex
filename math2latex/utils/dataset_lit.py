@@ -1,3 +1,4 @@
+import os
 
 from data import (
     MathToLatexDataset,
@@ -11,18 +12,19 @@ import lightning as L
 class LitMathToLatexDataModule(L.LightningDataModule):
     def __init__(self, config):
         super().__init__()
+        # self.save_hyperparameters()
 
         self.config = config
+        formulas_filename = os.path.join(self.config.train_dataset.root, self.config.train_dataset.label_file)
+        all_formuals = get_formulas(formulas_filename)
+        tokenizer = Tokenizer(all_formuals)
 
-        _all_formuals = get_formulas('dataset/im2latex_formulas.norm.processed.lst')
-        tokenizer = Tokenizer(_all_formuals)
-
-        tokenizer.save_vocab("dataset/tokenizer_vocab.json")
+        tokenizer.save_vocab("tokenizer_vocab.json")
 
     def setup(self, stage):
 
         self.tokenizer = Tokenizer()
-        self.tokenizer.load_vocab("dataset/tokenizer_vocab.json")
+        self.tokenizer.load_vocab("tokenizer_vocab.json")
 
         self.train_dataset = MathToLatexDataset(
             self.config.train_dataset.root,
