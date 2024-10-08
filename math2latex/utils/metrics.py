@@ -3,7 +3,7 @@ import torch
 from torchmetrics import Metric
 from torchmetrics.text import BLEUScore, EditDistance, CharErrorRate
 
-# write wrapper for BLEUScore to have it work on batched inputs
+
 class BLEUScoreMetric(Metric):
     def __init__(self, tokenizer, n_gram: int = 4, smooth: bool = False, weights: list = None):
         super().__init__()
@@ -30,7 +30,6 @@ class BLEUScoreMetric(Metric):
         return self.score / self.count
 
 
-# write wrapper for EditDistance to have it work on batched inputs
 class EditDistanceMetric(Metric):
     def __init__(self, tokenizer, substitution_cost=1, reduction='mean'):
         super().__init__()
@@ -55,6 +54,7 @@ class EditDistanceMetric(Metric):
 
     def compute(self):
         return self.score / self.count
+
 
 class CERMetric(Metric):
     def __init__(self, tokenizer):
