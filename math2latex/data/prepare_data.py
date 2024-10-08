@@ -2,7 +2,7 @@ import sys, logging, argparse, os
 from pathlib import Path
 
 
-import utils
+from .utils import download_from_url, extract_tarfile, find_and_replace, process_images
 
 def process_args(args):
     parser = argparse.ArgumentParser(description='Download processed data and generate vocab')
@@ -77,12 +77,12 @@ def prepare_data(args):
     for filename, url in DATASET_DICT.items():
         filepath = "".join([data_dir, "/", filename])
         if not Path(filepath).is_file():
-            utils.download_from_url(url, filepath)
+            download_from_url(url, filepath)
     logging.info("Dataset files downloaded")
 
     # Untar Processed images
     formula_images_filename = "".join([data_dir, "/formula_images.tar.gz"])
-    utils.extract_tarfile(formula_images_filename, data_dir)
+    extract_tarfile(formula_images_filename, data_dir)
     logging.info("Image files unzipped")
 
     # cleaning the labels
@@ -92,7 +92,7 @@ def prepare_data(args):
     cleaned_file = "".join([data_dir, "/", cleaned_file])
     if not Path(cleaned_file).is_file():
         print("Cleaning data...")
-        utils.find_and_replace(label_path, cleaned_file)
+        find_and_replace(label_path, cleaned_file)
     else:
         print("Cleaned data already exists.")
 
@@ -104,7 +104,7 @@ def prepare_data(args):
     processed_imgs_dir = "".join([data_dir, "/", parameters.processed_imgs_dir])
 
     logging.info('Processing images...')
-    utils.process_images(dataset_dir, processed_imgs_dir)
+    process_images(dataset_dir, processed_imgs_dir)
     
     logging.info('Images processed')
     logging.info('Script finished')
