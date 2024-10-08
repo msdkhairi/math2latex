@@ -3,23 +3,25 @@ class Config:
         for key, value in dictionary.items():
             setattr(self, key, Config(value) if isinstance(value, dict) else value)
 
+dataset_dir = 'dataset'
+
 all_configurations = {
     'train_dataset': {
-        'root': '/scratch/mka267/workspace-scratch/math2latex-data/dataset',
+        'root': dataset_dir,
         'images_folder': 'formula_images_processed',
         'label_file': 'im2latex_formulas.norm.processed.lst',
         'data_filter': 'im2latex_train_filter.lst',
         'transform': 'train'
     },
     'val_dataset': {
-        'root': '/scratch/mka267/workspace-scratch/math2latex-data/dataset',
+        'root': dataset_dir,
         'images_folder': 'formula_images_processed',
         'label_file': 'im2latex_formulas.norm.processed.lst',
         'data_filter': 'im2latex_validate_filter.lst',
         'transform': 'test'
     },
     'test_dataset': {
-        'root': '/scratch/mka267/workspace-scratch/math2latex-data/dataset',
+        'root': dataset_dir,
         'images_folder': 'formula_images_processed',
         'label_file': 'im2latex_formulas.norm.processed.lst',
         'data_filter': 'im2latex_test_filter.lst',
@@ -53,8 +55,7 @@ all_configurations = {
         'gamma': 0.5
     },
     'trainer': {
-        'epochs': 2,
-        'gpus': 1,
+        'epochs': 100,
         'accelerator': 'gpu',
         'batch_size': 32,
         'learning_rate' : 0.001
