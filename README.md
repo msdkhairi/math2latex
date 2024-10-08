@@ -36,10 +36,10 @@ This will create a dataset folder with all the dataset files inside --dataset-di
 
 ### Training
 
-The configuration for the training process can be found in the `src/config.py` file.
+The configuration for the training process can be found in the `math2latex/config/config.py` file.
 To train the model, run the following command in the root directory of the repository:
 
-```shell
+```bash
 python math2latex/train.py"
 ```
 
@@ -49,7 +49,7 @@ This will train the model using the dataset and save the trained model in each e
 
 To test the model, run the following command in the root directory of the repository:
 
-```shell
+```bash
 python math2latex/test.py
 ```
 
@@ -59,7 +59,7 @@ This will test the model using the test dataset and print the BLEU score, Edit D
 
 To run the demo, run the following command in the root directory of the repository:
 
-```shell
+```bash
 python demo.py
 ```
 This command runs a demo of the tool, allowing you to see its functionality in action.
