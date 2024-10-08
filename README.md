@@ -8,19 +8,19 @@ To use math2latex, follow these steps:
 
 1. Clone the repository:
 
-    ```shell
+    ```bash
     git clone https://github.com/msdkhairi/math2latex.git
     ```
 
 2. Navigate to the project directory:
 
-    ```shell
+    ```bas
     cd math2latex
     ```
 
 3. Install the required dependencies:
 
-    ```shell
+    ```bash
     pip install -r requirements.txt
     ```
 
@@ -28,8 +28,8 @@ To use math2latex, follow these steps:
 
 To prepare the data for conversion, run the following command in the root directory of the repository:
 
-```shell
-python src/data/prepare_data.py --dataset-dir "dataset"
+```bash
+python math2latex/data/prepare_data.py --dataset-dir "dataset"
  ```
   
 This will create a dataset folder with all the dataset files inside --dataset-dir directory.
@@ -40,7 +40,7 @@ The configuration for the training process can be found in the `src/config.py` f
 To train the model, run the following command in the root directory of the repository:
 
 ```shell
-python src/train.py"
+python math2latex/train.py"
 ```
 
 This will train the model using the dataset and save the trained model in each epoch in the `runs` directory.
@@ -50,7 +50,7 @@ This will train the model using the dataset and save the trained model in each e
 To test the model, run the following command in the root directory of the repository:
 
 ```shell
-python src/test.py
+python math2latex/test.py
 ```
 
 This will test the model using the test dataset and print the BLEU score, Edit Distance and Exact Match of the model.
