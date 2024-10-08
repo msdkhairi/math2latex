@@ -1,3 +1,4 @@
+import torchtext; torchtext.disable_torchtext_deprecation_warning()
 
 from utils import LitMathToLatex, LitMathToLatexDataModule
 from config import config
