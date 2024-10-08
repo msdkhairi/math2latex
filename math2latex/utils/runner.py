@@ -52,9 +52,9 @@ class LitMathToLatex(L.LightningModule):
         val_edit_distance = self.val_edit_distance(preds, targets)
         val_cer = self.val_cer(preds, targets)
 
-        self.log('val_bleu', val_bleu, on_step=False, on_epoch=True, prog_bar=True)
-        self.log('val_ed', val_edit_distance, on_step=False, on_epoch=True, prog_bar=True)
-        self.log('val_cer', val_cer, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('val_bleu', val_bleu, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log('val_ed', val_edit_distance, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
+        self.log('val_cer', val_cer, on_step=False, on_epoch=True, prog_bar=True, sync_dist=True)
         return loss
 
     def test_step(self, batch, batch_idx):
