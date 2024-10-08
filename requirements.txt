@@ -10,3 +10,4 @@ tensorboard==2.18.0
 matplotlib==3.9.2
 nltk==3.9.1
 torchtext==0.18.0
+gradio==4.44.1
