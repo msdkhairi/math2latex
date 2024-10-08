@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 
 import gradio as gr
 
-from src.data.utils import get_formulas
-from src.data.dataset import TrainDataset, get_dataloader, Tokenizer
-from src.model.transformer import ResNetTransformer
+from math2latex.data.utils import get_formulas
+from math2latex.data.dataset import Tokenizer
+from math2latex.model.transformer import ResNetTransformer
 
 # Global variables to hold the setup components
 model, tokenizer = None, None
@@ -37,7 +37,7 @@ def latex2image(latex_expression, image_name, image_size_in=(3, 0.6), fontsize=1
 def setup():
     global model, tokenizer
     # setup the model
-    checkpoint_path = 'runs/model_epoch_25.pth'
+    checkpoint_path = 'runs/epoch=99-step=29500.ckpt'
     model = ResNetTransformer()
     model.load_state_dict(torch.load(checkpoint_path))
     model.to("cpu")
