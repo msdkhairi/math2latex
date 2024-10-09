@@ -122,9 +122,3 @@ def process_images(dataset_dir, processed_imgs_dir):
             for _ in pool.imap_unordered(process_image, args_list):
                 progress_bar.update()
 
-    
-
-class Config:
-    def __init__(self, dictionary):
-        for key, value in dictionary.items():
-            setattr(self, key, value)
