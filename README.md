@@ -37,7 +37,7 @@ python math2latex/data/prepare_data.py --dataset-dir "dataset"
   
 This will create a dataset folder with all the dataset files inside --dataset-dir directory.
 
-## Training
+### Training
 
 The configuration for the training process can be found in the `math2latex/config/config.py` file.
 To train the model, run the following command in the root directory of the repository:
@@ -48,7 +48,7 @@ python math2latex/train.py
 
 This will train the model using the dataset and save the trained model in each epoch in the `runs` directory.
 
-## Test
+### Test
 
 To test the model, run the following command in the root directory of the repository:
 
@@ -58,7 +58,7 @@ python math2latex/test.py
 
 This will test the model using the test dataset and print the BLEU score, Edit Distance and Exact Match of the model.
 
-## Demo
+### Demo
 
 To run the demo, run the following command in the root directory of the repository:
 
