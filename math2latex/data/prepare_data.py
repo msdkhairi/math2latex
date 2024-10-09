@@ -2,7 +2,7 @@ import sys, logging, argparse, os
 from pathlib import Path
 
 
-from .utils import download_from_url, extract_tarfile, find_and_replace, process_images
+from utils import download_from_url, extract_tarfile, find_and_replace, process_images
 
 def process_args(args):
     parser = argparse.ArgumentParser(description='Download processed data and generate vocab')
