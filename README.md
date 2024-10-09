@@ -1,7 +1,8 @@
-## math2latex
+## Introduction
 
 math2latex is a tool that converts math images to LaTeX format. It provides a convenient way to convert handwritten or scanned math equations into LaTeX code, making it easier to incorporate them into documents or use them in mathematical typesetting.
 
+![Visualization of the task of math2latex](assets/task.png)
 
 
 ### Installation
