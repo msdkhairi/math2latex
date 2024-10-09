@@ -24,11 +24,8 @@ class LitMathToLatex(L.LightningModule):
                 milestones: list = [10],
                 gamma: float = 0.5,
     ):
-    # def __init__(self, config):
         super().__init__()
         self.save_hyperparameters()
-
-        # self.config = config
 
         self.optim_params = {
             'lr': lr,
@@ -105,7 +102,7 @@ class LitMathToLatex(L.LightningModule):
     
     def on_test_epoch_end(self, outputs):
         test_results = self.test_metrics.compute()
-        
+
         self.log('test_bleu', test_results['test_BLEU'].item())
         self.log('test_ed', test_results['test_ED'].item())
         self.log('test_cer', test_results['test_CER'].item())
