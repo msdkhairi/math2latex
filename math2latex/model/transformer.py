@@ -7,7 +7,7 @@ from .positional_encoding import PositionalEncoding1D, PositionalEncoding2D
 
 class ResNetTransformer(nn.Module):
     def __init__(self,
-                 d_model=128, 
+                 d_model=256, 
                  num_heads=4,
                  num_decoder_layers=3, 
                  dim_feedforward=256, 
@@ -27,10 +27,10 @@ class ResNetTransformer(nn.Module):
         self.max_len_output = max_len_output
 
         # Encoder
-        resnet18 = torchvision.models.resnet18(weights=None)
+        base_backbone = torchvision.models.resnet34(weights=None)
 
         # Remove the classification head and layer 4 from resnt18 and keep the first 3 layers
-        self.backbone = nn.Sequential(*list(resnet18.children())[:-3])
+        self.backbone = nn.Sequential(*list(base_backbone.children())[:-3])
 
         self.conv1x1 = nn.Conv2d(256, d_model, kernel_size=1, stride=1, padding=0)
         self.encoder_pos_enc = PositionalEncoding2D(d_model, 
