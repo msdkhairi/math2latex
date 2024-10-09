@@ -43,7 +43,7 @@ The configuration for the training process can be found in the `math2latex/confi
 To train the model, run the following command in the root directory of the repository:
 
 ```bash
-python math2latex/train.py"
+python math2latex/train.py
 ```
 
 This will train the model using the dataset and save the trained model in each epoch in the `runs` directory.
