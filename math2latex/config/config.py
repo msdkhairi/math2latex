@@ -3,6 +3,8 @@ from .utils import Config
 
 
 dataset_dir = 'dataset'
+batch_size = 32
+num_workers = 32
 
 all_configurations = {
     'datamodule': {
@@ -21,17 +23,17 @@ all_configurations = {
         'test_dataset_label_file': 'im2latex_formulas.norm.processed.lst',
         'test_dataset_data_filter': 'im2latex_test_filter.lst',
         'test_dataset_transform': 'test',
-        'train_dataloader_batch_size': 64,
-        'train_dataloader_num_workers': 32,
-        'val_dataloader_batch_size': 64,
-        'val_dataloader_num_workers': 32,
-        'test_dataloader_batch_size': 64,
-        'test_dataloader_num_workers': 32
+        'train_dataloader_batch_size': batch_size,
+        'train_dataloader_num_workers': num_workers,
+        'val_dataloader_batch_size': batch_size,
+        'val_dataloader_num_workers': num_workers,
+        'test_dataloader_batch_size': batch_size,
+        'test_dataloader_num_workers': num_workers,
     },
     'litmodel': {
-        'd_model': 128,
-        'num_heads': 4,
-        'num_decoder_layers': 3,
+        'd_model': 256,
+        'num_heads': 8,
+        'num_decoder_layers': 6,
         'dim_feedforward': 256,
         'dropout': 0.3,
         'num_classes': 462,
@@ -42,11 +44,11 @@ all_configurations = {
         'gamma': 0.5
     },
     'trainer': {
-        'max_epochs': 200,
+        'max_epochs': 201,
         'accelerator': 'auto',
         'strategy': 'auto',
         'enable_progress_bar': True,
-        'check_val_every_n_epoch': 1,
+        'check_val_every_n_epoch': 10,
     }
 }
 
